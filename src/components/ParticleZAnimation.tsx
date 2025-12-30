@@ -59,8 +59,11 @@ class Particle {
         this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
         this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
         
-        // Grow size as particle settles into position
-        this.size = this.baseSize + (this.finalSize - this.baseSize) * this.progress;
+        // Only grow when almost in final position (after 80% progress)
+        if (this.progress > 0.8) {
+          const growthProgress = (this.progress - 0.8) / 0.2; // 0 to 1 in last 20%
+          this.size = this.baseSize + (this.finalSize - this.baseSize) * growthProgress;
+        }
       } else {
         this.x += this.vx;
         this.y += this.vy;
