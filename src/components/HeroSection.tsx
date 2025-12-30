@@ -29,7 +29,7 @@ const HeroSection = () => {
             y: logoY,
             scale: logoScale,
             opacity: logoOpacity,
-            marginBottom: 'clamp(4px, 1.5vh, 24px)'
+            marginBottom: 'clamp(6px, 2.25vh, 36px)'
           }}
           className="flex flex-col items-center"
         >
@@ -37,8 +37,8 @@ const HeroSection = () => {
           <div 
             className="bg-primary flex items-center justify-center"
             style={{ 
-              width: 'clamp(50px, 10vh, 140px)', 
-              height: 'clamp(50px, 10vh, 140px)' 
+              width: 'clamp(75px, 15vh, 210px)', 
+              height: 'clamp(75px, 15vh, 210px)' 
             }}
           >
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
@@ -52,10 +52,10 @@ const HeroSection = () => {
           </div>
           {/* Text - fades out first */}
           <motion.div 
-            style={{ opacity: textOpacity, marginTop: 'clamp(2px, 0.5vh, 8px)' }}
+            style={{ opacity: textOpacity, marginTop: 'clamp(3px, 0.75vh, 12px)' }}
             className="font-light tracking-tight text-foreground"
           >
-            <span style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.75rem)' }}>Zolve</span>
+            <span style={{ fontSize: 'clamp(1.125rem, 2.7vh, 2.625rem)' }}>Zolve</span>
           </motion.div>
         </motion.div>
         
@@ -65,9 +65,9 @@ const HeroSection = () => {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="font-display font-light text-foreground leading-tight"
           style={{ 
-            fontSize: 'clamp(1.5rem, 7vh, 5.5rem)', 
-            marginTop: 'clamp(8px, 2vh, 32px)',
-            marginBottom: 'clamp(4px, 1.5vh, 24px)' 
+            fontSize: 'clamp(2.25rem, 10.5vh, 8.25rem)', 
+            marginTop: 'clamp(12px, 3vh, 48px)',
+            marginBottom: 'clamp(6px, 2.25vh, 36px)' 
           }}
         >
           Dale valor
@@ -81,8 +81,8 @@ const HeroSection = () => {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-muted-foreground max-w-2xl mx-auto font-light"
           style={{ 
-            fontSize: 'clamp(0.7rem, 1.8vh, 1.4rem)', 
-            marginBottom: 'clamp(8px, 2vh, 40px)' 
+            fontSize: 'clamp(1.05rem, 2.7vh, 2.1rem)', 
+            marginBottom: 'clamp(12px, 3vh, 60px)' 
           }}
         >
           No vendemos automatizaciones,
@@ -99,8 +99,8 @@ const HeroSection = () => {
             to="/catalogo"
             className="inline-block border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 tracking-wide"
             style={{ 
-              padding: 'clamp(6px, 1.2vh, 14px) clamp(12px, 2.5vh, 28px)',
-              fontSize: 'clamp(0.6rem, 1.1vh, 0.8rem)'
+              padding: 'clamp(9px, 1.8vh, 21px) clamp(18px, 3.75vh, 42px)',
+              fontSize: 'clamp(0.9rem, 1.65vh, 1.2rem)'
             }}
           >
             VER CATÁLOGO
