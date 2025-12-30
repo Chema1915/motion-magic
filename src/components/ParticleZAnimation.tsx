@@ -8,6 +8,8 @@ class Particle {
   vx: number;
   vy: number;
   size: number;
+  baseSize: number;
+  finalSize: number;
   color: string;
   progress: number;
   canvasWidth: number;
@@ -28,7 +30,9 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.vx = (Math.random() - 0.5) * 1.5;
     this.vy = (Math.random() - 0.5) * 1.5;
-    this.size = 1.8; // Size calculated to touch neighbors at 0.002 spacing
+    this.baseSize = 1.8;
+    this.finalSize = 3.2; // Grows to fill gaps when formed
+    this.size = this.baseSize;
     this.color = '#D1D5DB';
     this.progress = 0;
     this.delay = Math.random() * 0.2 + relativeY * 0.15; // Shorter delays
@@ -54,6 +58,9 @@ class Particle {
         
         this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
         this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        
+        // Grow size as particle settles into position
+        this.size = this.baseSize + (this.finalSize - this.baseSize) * this.progress;
       } else {
         this.x += this.vx;
         this.y += this.vy;
