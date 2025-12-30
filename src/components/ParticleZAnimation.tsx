@@ -196,7 +196,12 @@ const ParticleZAnimation = () => {
       mouse.vy = mouse.y - mouse.prevY;
     };
     
-    const handleMouseDown = () => {
+    const handleMouseDown = (e: MouseEvent) => {
+      // Don't activate particle interaction when clicking on buttons or links
+      const target = e.target as HTMLElement;
+      if (target.closest('button, a, [role="button"]')) {
+        return;
+      }
       mouse.pressed = true;
     };
     
