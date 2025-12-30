@@ -29,7 +29,9 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.vx = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
     this.vy = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
-    this.size = isBackground ? 1.2 : 1.8;
+    // Size scales with screen - base size relative to a 1920px reference
+    const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
+    this.size = isBackground ? 1.2 * scaleFactor : 1.8 * scaleFactor;
     this.color = isBackground ? '#9CA3AF' : '#D1D5DB';
     this.progress = 0;
     this.delay = Math.random() * 0.2 + relativeY * 0.15;
@@ -42,6 +44,9 @@ class Particle {
     this.canvasHeight = canvasHeight;
     this.targetX = this.relativeTargetX * canvasWidth;
     this.targetY = this.relativeTargetY * canvasHeight;
+    // Update size on resize
+    const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
+    this.size = this.isBackground ? 1.2 * scaleFactor : 1.8 * scaleFactor;
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
