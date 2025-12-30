@@ -46,7 +46,10 @@ class Particle {
     this.targetY = this.relativeTargetY * canvasHeight;
   }
 
-  update(forming: boolean, time: number) {
+  update(forming: boolean, time: number, mouse: { x: number; y: number; pressed: boolean }) {
+    const mouseRadius = 80; // Radius of mouse influence
+    const mouseForce = 8; // How strongly particles are pushed
+    
     if (forming) {
       const adjustedTime = Math.max(0, time - this.delay);
       if (adjustedTime > 0) {
@@ -56,12 +59,31 @@ class Particle {
         const eased = this.easeOutExpo(this.progress);
         const wobble = Math.sin(time * 3 + this.delay * 10) * (1 - this.progress) * 2;
         
-        this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
-        this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        // Calculate distance from mouse
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        // Apply mouse repulsion if pressed and within radius
+        if (mouse.pressed && dist < mouseRadius && dist > 0) {
+          const force = (mouseRadius - dist) / mouseRadius * mouseForce;
+          this.x += (dx / dist) * force;
+          this.y += (dy / dist) * force;
+        } else {
+          // Move towards target when not being pushed
+          this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
+          this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        }
+        
+        // Always try to return to target position (softer when pushed)
+        if (!mouse.pressed || dist >= mouseRadius) {
+          this.x += (this.targetX - this.x) * 0.08;
+          this.y += (this.targetY - this.y) * 0.08;
+        }
         
         // Only grow when almost in final position (after 80% progress)
         if (this.progress > 0.8) {
-          const growthProgress = (this.progress - 0.8) / 0.2; // 0 to 1 in last 20%
+          const growthProgress = (this.progress - 0.8) / 0.2;
           this.size = this.baseSize + (this.finalSize - this.baseSize) * growthProgress;
         }
       } else {
@@ -166,6 +188,26 @@ const ParticleZAnimation = () => {
     let formingTime = 0;
     const timeout = setTimeout(() => { forming = true; }, 1000);
 
+    // Mouse tracking
+    const mouse = { x: 0, y: 0, pressed: false };
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+    
+    const handleMouseDown = () => {
+      mouse.pressed = true;
+    };
+    
+    const handleMouseUp = () => {
+      mouse.pressed = false;
+    };
+    
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+
     let animationId: number;
 
     function animate() {
@@ -177,7 +219,7 @@ const ParticleZAnimation = () => {
       }
       
       particles.forEach(particle => {
-        particle.update(forming, formingTime);
+        particle.update(forming, formingTime, mouse);
         particle.draw(ctx);
       });
       animationId = requestAnimationFrame(animate);
@@ -199,12 +241,15 @@ const ParticleZAnimation = () => {
     
     return () => {
       window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       clearTimeout(timeout);
       cancelAnimationFrame(animationId);
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />;
+  return <canvas ref={canvasRef} className="absolute inset-0" />;
 };
 
 export default ParticleZAnimation;
