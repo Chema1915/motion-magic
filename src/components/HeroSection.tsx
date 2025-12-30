@@ -30,10 +30,10 @@ const HeroSection = () => {
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-[2vh] flex flex-col items-center"
+          className="mb-[2vh] xl:mb-[4vh] flex flex-col items-center"
         >
           {/* Logo box */}
-          <div className="w-[min(10vw,10vh)] h-[min(10vw,10vh)] min-w-[60px] min-h-[60px] max-w-[100px] max-h-[100px] bg-primary flex items-center justify-center">
+          <div className="w-[min(10vw,10vh)] h-[min(10vw,10vh)] min-w-[60px] min-h-[60px] max-w-[100px] max-h-[100px] xl:max-w-[160px] xl:max-h-[160px] bg-primary flex items-center justify-center">
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
               <polygon
                 points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
@@ -46,9 +46,9 @@ const HeroSection = () => {
           {/* Text - fades out first */}
           <motion.div 
             style={{ opacity: textOpacity }}
-            className="mt-1 font-light tracking-tight text-foreground"
+            className="mt-1 xl:mt-3 font-light tracking-tight text-foreground"
           >
-            <span style={{ fontSize: 'clamp(0.9rem, 1.5vw, 1.5rem)' }}>Zolve</span>
+            <span className="text-base xl:text-3xl">Zolve</span>
           </motion.div>
         </motion.div>
         
@@ -56,8 +56,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="font-display font-light mb-[1.5vh] text-foreground leading-tight"
-          style={{ fontSize: 'clamp(1.8rem, 5vw, 5rem)' }}
+          className="font-display font-light mb-[1.5vh] xl:mb-[3vh] text-foreground leading-tight text-3xl md:text-5xl xl:text-8xl"
         >
           Dale valor
           <br />
@@ -68,8 +67,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-muted-foreground max-w-2xl mx-auto mb-[2vh] font-light"
-          style={{ fontSize: 'clamp(0.8rem, 1.2vw, 1.25rem)' }}
+          className="text-muted-foreground max-w-2xl mx-auto mb-[2vh] xl:mb-[4vh] font-light text-sm md:text-lg xl:text-2xl"
         >
           No vendemos automatizaciones,
           <br />
@@ -83,7 +81,7 @@ const HeroSection = () => {
         >
           <Link
             to="/catalogo"
-            className="inline-block px-6 py-3 border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-xs md:text-sm tracking-wide"
+            className="inline-block px-6 py-3 xl:px-8 xl:py-4 border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-xs md:text-sm tracking-wide"
           >
             VER CATÁLOGO
           </Link>
