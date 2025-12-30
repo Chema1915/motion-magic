@@ -11,11 +11,12 @@ const HeroSection = () => {
   });
 
   // Logo animation - starts centered, moves up to header position
-  // Calculate the distance from center to header (approximately half viewport height minus header offset)
-  const logoY = useTransform(scrollYProgress, [0, 0.25], [0, -280]);
-  const logoScale = useTransform(scrollYProgress, [0, 0.25], [1, 0.25]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const logoOpacity = useTransform(scrollYProgress, [0.2, 0.25], [1, 0]);
+  // Smoother transition that ends exactly at header position
+  const logoY = useTransform(scrollYProgress, [0, 0.3], [0, -320]);
+  const logoScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.25]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  // Logo fades out smoothly at the end of the animation
+  const logoOpacity = useTransform(scrollYProgress, [0.25, 0.32], [1, 0]);
 
   return (
     <section ref={ref} className="min-h-screen flex items-center justify-center bg-secondary relative overflow-hidden">
