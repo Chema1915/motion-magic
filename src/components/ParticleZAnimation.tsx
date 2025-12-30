@@ -60,7 +60,7 @@ class Particle {
       return;
     }
     
-    const mouseRadius = 60; // Radius of mouse influence
+    const mouseRadius = 10; // Very small, just cursor size
     
     // Calculate distance from mouse
     const dx = this.x - mouse.x;
