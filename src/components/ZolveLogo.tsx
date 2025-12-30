@@ -19,6 +19,7 @@ const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
             points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
             fill="currentColor"
             className="text-primary-foreground"
+            transform="rotate(180 50 50)"
           />
         </svg>
       </div>
