@@ -43,45 +43,49 @@ class Particle {
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; pressed: boolean }) {
-    const mouseRadius = 100; // Radius of mouse influence
-    const mouseForce = 15; // How strongly particles are pushed
+    const mouseRadius = 120; // Radius of mouse influence
     
     // Calculate distance from mouse
     const dx = this.x - mouse.x;
     const dy = this.y - mouse.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    // Apply mouse repulsion if pressed and within radius - works like sand
-    if (mouse.pressed && dist < mouseRadius && dist > 0) {
-      const force = (mouseRadius - dist) / mouseRadius * mouseForce;
-      this.vx += (dx / dist) * force * 0.3;
-      this.vy += (dy / dist) * force * 0.3;
+    // If mouse is pressed and near particle, reset to random movement
+    if (mouse.pressed && dist < mouseRadius) {
+      // Give random velocity like initial state
+      this.vx = (Math.random() - 0.5) * 3;
+      this.vy = (Math.random() - 0.5) * 3;
+      this.progress = 0; // Reset progress so it animates back
     }
     
-    // Apply velocity with friction
+    // Apply velocity
     this.x += this.vx;
     this.y += this.vy;
-    this.vx *= 0.92; // Friction
-    this.vy *= 0.92;
     
     // Bounce off walls
-    if (this.x < 0) { this.x = 0; this.vx *= -0.5; }
-    if (this.x > this.canvasWidth) { this.x = this.canvasWidth; this.vx *= -0.5; }
-    if (this.y < 0) { this.y = 0; this.vy *= -0.5; }
-    if (this.y > this.canvasHeight) { this.y = this.canvasHeight; this.vy *= -0.5; }
+    if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
+    if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
     
-    if (forming) {
+    // Keep within bounds
+    this.x = Math.max(0, Math.min(this.canvasWidth, this.x));
+    this.y = Math.max(0, Math.min(this.canvasHeight, this.y));
+    
+    if (forming && !mouse.pressed) {
       const adjustedTime = Math.max(0, time - this.delay);
       if (adjustedTime > 0) {
         this.progress += this.speed;
         if (this.progress > 1) this.progress = 1;
         
-        // Gently pull back to target position when not being pushed
-        if (!mouse.pressed) {
-          const returnForce = 0.03;
-          this.vx += (this.targetX - this.x) * returnForce;
-          this.vy += (this.targetY - this.y) * returnForce;
-        }
+        const eased = this.easeOutExpo(this.progress);
+        const wobble = Math.sin(time * 3 + this.delay * 10) * (1 - this.progress) * 2;
+        
+        // Move towards target
+        this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
+        this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        
+        // Slow down velocity as it forms
+        this.vx *= 0.95;
+        this.vy *= 0.95;
       }
     }
   }
