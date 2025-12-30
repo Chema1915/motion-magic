@@ -6,7 +6,9 @@ const Header = () => {
   
   // Background opacity based on scroll
   const headerBg = useTransform(scrollY, [0, 300], [0, 0.95]);
-  const borderOpacity = useTransform(scrollY, [0, 300], [0, 1]);
+  
+  // Header logo appears only after hero logo fades (synced with hero's logoOpacity)
+  const headerLogoOpacity = useTransform(scrollY, [200, 280], [0, 1]);
 
   return (
     <motion.header
@@ -15,10 +17,7 @@ const Header = () => {
       {/* Background layer */}
       <motion.div 
         className="absolute inset-0 bg-background border-b border-border"
-        style={{ 
-          opacity: headerBg,
-          borderBottomColor: `hsl(var(--border) / var(--border-opacity))`,
-        }}
+        style={{ opacity: headerBg }}
       />
       <motion.div 
         className="absolute inset-0 backdrop-blur-md"
@@ -30,9 +29,12 @@ const Header = () => {
           Zolve
         </Link>
 
-        {/* Center logo - always visible, receives the hero logo */}
+        {/* Center logo - hidden initially, appears when hero logo fades */}
         <Link to="/" className="absolute left-1/2 transform -translate-x-1/2">
-          <div className="w-10 h-10 bg-primary flex items-center justify-center">
+          <motion.div 
+            style={{ opacity: headerLogoOpacity }}
+            className="w-10 h-10 bg-primary flex items-center justify-center"
+          >
             <svg viewBox="0 0 100 100" className="w-full h-full p-2">
               <polygon
                 points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
@@ -41,7 +43,7 @@ const Header = () => {
                 transform="translate(100 0) scale(-1 1)"
               />
             </svg>
-          </div>
+          </motion.div>
         </Link>
 
         <nav className="flex items-center gap-8">
