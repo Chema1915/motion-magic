@@ -30,10 +30,10 @@ const HeroSection = () => {
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-[2vh] xl:mb-[4vh] flex flex-col items-center"
+          className="mb-[2vh] md:mb-[3vh] xl:mb-16 flex flex-col items-center"
         >
-          {/* Logo box */}
-          <div className="w-[min(10vw,10vh)] h-[min(10vw,10vh)] min-w-[60px] min-h-[60px] max-w-[100px] max-h-[100px] xl:max-w-[160px] xl:max-h-[160px] bg-primary flex items-center justify-center">
+          {/* Logo box - responsive sizing */}
+          <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32 2xl:w-40 2xl:h-40 bg-primary flex items-center justify-center">
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
               <polygon
                 points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
@@ -46,9 +46,9 @@ const HeroSection = () => {
           {/* Text - fades out first */}
           <motion.div 
             style={{ opacity: textOpacity }}
-            className="mt-1 xl:mt-3 font-light tracking-tight text-foreground"
+            className="mt-1 md:mt-2 xl:mt-3 font-light tracking-tight text-foreground"
           >
-            <span className="text-base xl:text-3xl">Zolve</span>
+            <span className="text-sm md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl">Zolve</span>
           </motion.div>
         </motion.div>
         
@@ -56,7 +56,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="font-display font-light mb-[1.5vh] xl:mb-[3vh] text-foreground leading-tight text-3xl md:text-5xl xl:text-8xl"
+          className="font-display font-light mb-[1.5vh] md:mb-[2vh] xl:mb-8 text-foreground leading-tight text-3xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl"
         >
           Dale valor
           <br />
@@ -67,7 +67,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-muted-foreground max-w-2xl mx-auto mb-[2vh] xl:mb-[4vh] font-light text-sm md:text-lg xl:text-2xl"
+          className="text-muted-foreground max-w-2xl mx-auto mb-[2vh] md:mb-[3vh] xl:mb-12 font-light text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl"
         >
           No vendemos automatizaciones,
           <br />
