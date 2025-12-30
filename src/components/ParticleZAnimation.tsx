@@ -105,18 +105,22 @@ const ParticleZAnimation = () => {
       const thickness = 0.07;
       const spacing = 0.002; // Much denser spacing for tiny circles
       
+      // Calculate diagonal angle to make bars same visual width
+      const diagAngle = Math.atan2(zHeight - thickness * 2, zWidth);
+      const barThickness = thickness * Math.sin(diagAngle); // Adjusted for same visual width
+      
       // Z as a single continuous polygon (typography style)
       const zPolygon = [
         { x: offsetX, y: offsetY },
         { x: offsetX + zWidth, y: offsetY },
-        { x: offsetX + zWidth, y: offsetY + thickness },
-        { x: offsetX + thickness * 1.8, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth, y: offsetY + zHeight - thickness },
+        { x: offsetX + zWidth, y: offsetY + barThickness },
+        { x: offsetX + thickness * 1.2, y: offsetY + zHeight - barThickness },
+        { x: offsetX + zWidth, y: offsetY + zHeight - barThickness },
         { x: offsetX + zWidth, y: offsetY + zHeight },
         { x: offsetX, y: offsetY + zHeight },
-        { x: offsetX, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth - thickness * 1.8, y: offsetY + thickness },
-        { x: offsetX, y: offsetY + thickness },
+        { x: offsetX, y: offsetY + zHeight - barThickness },
+        { x: offsetX + zWidth - thickness * 1.2, y: offsetY + barThickness },
+        { x: offsetX, y: offsetY + barThickness },
       ];
       
       function isPointInPolygon(x: number, y: number, polygon: {x: number, y: number}[]): boolean {
