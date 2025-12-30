@@ -1,10 +1,12 @@
 interface ZolveLogoProps {
   size?: 'large' | 'medium' | 'small';
+  showText?: boolean;
+  className?: string;
 }
 
-const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
+const ZolveLogo = ({ size = 'large', showText = true, className = '' }: ZolveLogoProps) => {
   const sizes = {
-    large: { box: 'w-40 h-40', text: 'text-5xl' },
+    large: { box: 'w-[15vw] h-[15vw] min-w-[100px] min-h-[100px] max-w-[160px] max-h-[160px]', text: 'text-[4vw] min-text-2xl max-text-5xl' },
     medium: { box: 'w-10 h-10', text: 'text-xl' },
     small: { box: 'w-12 h-12', text: 'text-xl' }
   };
@@ -12,7 +14,7 @@ const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
   const { box, text } = sizes[size];
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className={`flex flex-col items-center gap-3 ${className}`}>
       <div className={`${box} bg-primary flex items-center justify-center`}>
         <svg viewBox="0 0 100 100" className="w-full h-full p-3">
           <polygon
@@ -23,8 +25,8 @@ const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
           />
         </svg>
       </div>
-      {size !== 'medium' && (
-        <div className={`${text} font-light tracking-tight text-foreground`}>
+      {showText && size !== 'medium' && (
+        <div className={`${text} font-light tracking-tight text-foreground`} style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}>
           Zolve
         </div>
       )}

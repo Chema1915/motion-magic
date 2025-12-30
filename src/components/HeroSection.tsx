@@ -11,9 +11,12 @@ const HeroSection = () => {
     offset: ['start start', 'end start']
   });
 
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
-  const logoScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.4]);
-  const logoY = useTransform(scrollYProgress, [0, 0.3], [0, -400]);
+  // Logo animation values
+  const logoScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.25]);
+  const logoY = useTransform(scrollYProgress, [0, 0.15], [0, -300]);
+  const logoX = useTransform(scrollYProgress, [0, 0.15], [0, 0]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const logoOpacity = useTransform(scrollYProgress, [0, 0.15, 0.2], [1, 1, 0]);
 
   return (
     <section ref={ref} className="min-h-screen flex items-center justify-center bg-secondary relative overflow-hidden">
@@ -21,10 +24,23 @@ const HeroSection = () => {
       
       <div className="text-center px-6 relative z-10">
         <motion.div 
-          style={{ opacity: logoOpacity, scale: logoScale, y: logoY }}
-          className="mb-16"
+          style={{ 
+            scale: logoScale, 
+            y: logoY, 
+            x: logoX,
+            opacity: logoOpacity
+          }}
+          className="mb-16 origin-center"
         >
-          <ZolveLogo size="large" />
+          <motion.div style={{ opacity: textOpacity }}>
+            <ZolveLogo size="large" showText={true} />
+          </motion.div>
+          <motion.div 
+            style={{ opacity: useTransform(textOpacity, [1, 0], [0, 1]) }}
+            className="absolute inset-0 flex items-start justify-center"
+          >
+            <ZolveLogo size="large" showText={false} />
+          </motion.div>
         </motion.div>
         
         <motion.h1 
