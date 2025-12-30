@@ -24,10 +24,9 @@ const Header = () => {
         style={{ opacity: headerBg }}
       />
       
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between relative z-10">
-        <Link to="/" className="text-xl font-light text-foreground opacity-0 pointer-events-none">
-          Zolve
-        </Link>
+      <div className="w-full px-6 py-4 flex items-center relative z-10">
+        {/* Left spacer (keeps layout stable; logo is absolutely centered) */}
+        <div className="flex-1" aria-hidden="true" />
 
         {/* Center logo - hidden initially, appears when hero logo fades */}
         <Link to="/" className="absolute left-1/2 transform -translate-x-1/2">
@@ -46,7 +45,7 @@ const Header = () => {
           </motion.div>
         </Link>
 
-        <nav className="flex items-center" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)' }}>
+        <nav className="ml-auto flex items-center" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)' }}>
           <Link 
             to="/catalogo" 
             className="text-muted-foreground hover:text-foreground transition-colors duration-200"
