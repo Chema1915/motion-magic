@@ -22,23 +22,23 @@ const HeroSection = () => {
     <section ref={ref} className="h-[100dvh] flex items-center justify-center bg-secondary relative overflow-hidden">
       <ParticleZAnimation />
       
-      <div className="text-center px-6 relative z-10 flex flex-col items-center justify-center py-[5vh]">
+      <div className="text-center px-6 relative z-10 flex flex-col items-center justify-center">
         {/* Hero Logo - animates up to header, starts below header on all screens */}
         <motion.div 
           style={{ 
             y: logoY,
             scale: logoScale,
             opacity: logoOpacity,
+            marginBottom: 'clamp(4px, 1.5vh, 24px)'
           }}
           className="flex flex-col items-center"
-          style-mb="clamp(8px, 2vh, 32px)"
         >
-          {/* Logo box - fluid responsive sizing */}
+          {/* Logo box - fluid responsive sizing based on viewport height */}
           <div 
             className="bg-primary flex items-center justify-center"
             style={{ 
-              width: 'clamp(60px, 12vh, 160px)', 
-              height: 'clamp(60px, 12vh, 160px)' 
+              width: 'clamp(50px, 10vh, 140px)', 
+              height: 'clamp(50px, 10vh, 140px)' 
             }}
           >
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
@@ -52,23 +52,23 @@ const HeroSection = () => {
           </div>
           {/* Text - fades out first */}
           <motion.div 
-            style={{ opacity: textOpacity }}
+            style={{ opacity: textOpacity, marginTop: 'clamp(2px, 0.5vh, 8px)' }}
             className="font-light tracking-tight text-foreground"
-            style-mt="clamp(4px, 1vh, 12px)"
           >
-            <span style={{ fontSize: 'clamp(0.875rem, 2vh, 2rem)' }}>Zolve</span>
+            <span style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.75rem)' }}>Zolve</span>
           </motion.div>
         </motion.div>
-
-        {/* Spacer */}
-        <div style={{ height: 'clamp(12px, 3vh, 48px)' }} />
         
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
           className="font-display font-light text-foreground leading-tight"
-          style={{ fontSize: 'clamp(1.75rem, 8vh, 6rem)', marginBottom: 'clamp(8px, 2vh, 32px)' }}
+          style={{ 
+            fontSize: 'clamp(1.5rem, 7vh, 5.5rem)', 
+            marginTop: 'clamp(8px, 2vh, 32px)',
+            marginBottom: 'clamp(4px, 1.5vh, 24px)' 
+          }}
         >
           Dale valor
           <br />
@@ -80,7 +80,10 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-muted-foreground max-w-2xl mx-auto font-light"
-          style={{ fontSize: 'clamp(0.75rem, 2vh, 1.5rem)', marginBottom: 'clamp(12px, 3vh, 48px)' }}
+          style={{ 
+            fontSize: 'clamp(0.7rem, 1.8vh, 1.4rem)', 
+            marginBottom: 'clamp(8px, 2vh, 40px)' 
+          }}
         >
           No vendemos automatizaciones,
           <br />
@@ -96,8 +99,8 @@ const HeroSection = () => {
             to="/catalogo"
             className="inline-block border-2 border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 tracking-wide"
             style={{ 
-              padding: 'clamp(8px, 1.5vh, 16px) clamp(16px, 3vh, 32px)',
-              fontSize: 'clamp(0.625rem, 1.2vh, 0.875rem)'
+              padding: 'clamp(6px, 1.2vh, 14px) clamp(12px, 2.5vh, 28px)',
+              fontSize: 'clamp(0.6rem, 1.1vh, 0.8rem)'
             }}
           >
             VER CATÁLOGO
