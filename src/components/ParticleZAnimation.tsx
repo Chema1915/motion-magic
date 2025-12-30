@@ -199,9 +199,10 @@ const ParticleZAnimation = () => {
     const handleMouseDown = (e: MouseEvent) => {
       // Don't activate particle interaction when clicking on buttons or links
       const target = e.target as HTMLElement;
-      if (target.closest('button, a, [role="button"]')) {
+      if (target.closest('button, a, [role="button"], input, textarea')) {
         return;
       }
+      e.preventDefault(); // Prevent text selection
       mouse.pressed = true;
     };
     
