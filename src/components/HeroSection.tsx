@@ -30,10 +30,10 @@ const HeroSection = () => {
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-8 md:mb-16 flex flex-col items-center"
+          className="mb-[3vh] md:mb-[4vh] flex flex-col items-center"
         >
           {/* Logo box */}
-          <div className="w-[12vw] h-[12vw] min-w-[80px] min-h-[80px] max-w-[160px] max-h-[160px] bg-primary flex items-center justify-center">
+          <div className="w-[10vw] h-[10vw] min-w-[70px] min-h-[70px] max-w-[120px] max-h-[120px] bg-primary flex items-center justify-center">
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
               <polygon
                 points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
@@ -46,9 +46,9 @@ const HeroSection = () => {
           {/* Text - fades out first */}
           <motion.div 
             style={{ opacity: textOpacity }}
-            className="mt-2 md:mt-3 font-light tracking-tight text-foreground"
+            className="mt-2 font-light tracking-tight text-foreground"
           >
-            <span style={{ fontSize: 'clamp(1.2rem, 3vw, 3rem)' }}>Zolve</span>
+            <span style={{ fontSize: 'clamp(1rem, 2vw, 2rem)' }}>Zolve</span>
           </motion.div>
         </motion.div>
         
@@ -56,7 +56,8 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-4xl md:text-6xl lg:text-8xl font-display font-light mb-4 md:mb-8 text-foreground leading-tight"
+          className="font-display font-light mb-[2vh] md:mb-[3vh] text-foreground leading-tight"
+          style={{ fontSize: 'clamp(2rem, 6vw, 6rem)' }}
         >
           Dale valor
           <br />
@@ -67,7 +68,8 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto mb-6 md:mb-12 font-light"
+          className="text-muted-foreground max-w-2xl mx-auto mb-[3vh] md:mb-[4vh] font-light"
+          style={{ fontSize: 'clamp(0.875rem, 1.5vw, 1.5rem)' }}
         >
           No vendemos automatizaciones,
           <br />
