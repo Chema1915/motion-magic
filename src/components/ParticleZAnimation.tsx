@@ -15,7 +15,7 @@ class Particle {
   delay: number;
   speed: number;
 
-  constructor(targetX: number, targetY: number, canvasWidth: number, canvasHeight: number, index: number, total: number) {
+  constructor(targetX: number, targetY: number, canvasWidth: number, canvasHeight: number) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.x = Math.random() * canvasWidth;
@@ -24,11 +24,10 @@ class Particle {
     this.targetY = targetY;
     this.vx = (Math.random() - 0.5) * 1.5;
     this.vy = (Math.random() - 0.5) * 1.5;
-    this.size = 2.5;
+    this.size = 2;
     this.color = '#D1D5DB';
     this.progress = 0;
-    // Staggered delay based on position for wave effect
-    this.delay = Math.random() * 0.4 + (targetY / canvasHeight) * 0.3;
+    this.delay = Math.random() * 0.5 + (targetY / canvasHeight) * 0.3;
     this.speed = 0.003 + Math.random() * 0.004;
   }
 
@@ -40,14 +39,11 @@ class Particle {
         if (this.progress > 1) this.progress = 1;
         
         const eased = this.easeOutExpo(this.progress);
-        
-        // Add subtle organic wobble during movement
         const wobble = Math.sin(time * 3 + this.delay * 10) * (1 - this.progress) * 2;
         
         this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
         this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
       } else {
-        // Still in chaos phase
         this.x += this.vx;
         this.y += this.vy;
         
@@ -70,7 +66,6 @@ class Particle {
     ctx.fill();
   }
 
-  // Smoother, more organic easing
   easeOutExpo(t: number): number {
     return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
   }
@@ -92,23 +87,24 @@ const ParticleZAnimation = () => {
     function createZPoints(canvasWidth: number, canvasHeight: number) {
       const points: { x: number; y: number }[] = [];
       
-      const zWidth = canvasWidth * 0.5;
-      const zHeight = canvasHeight * 0.55;
-      const offsetX = (canvasWidth - zWidth) / 2;
+      // Z positioned on the right, partially off-screen
+      const zWidth = canvasWidth * 0.7;
+      const zHeight = canvasHeight * 0.85;
+      const offsetX = canvasWidth * 0.45; // Push to the right
       const offsetY = (canvasHeight - zHeight) / 2;
-      const thickness = 55;
-      const spacing = 5;
+      const thickness = 80;
+      const spacing = 3.5; // Much denser for almost solid appearance
       
       const zPolygon = [
         { x: offsetX, y: offsetY },
         { x: offsetX + zWidth, y: offsetY },
         { x: offsetX + zWidth, y: offsetY + thickness },
-        { x: offsetX + thickness * 1.5, y: offsetY + zHeight - thickness },
+        { x: offsetX + thickness * 1.8, y: offsetY + zHeight - thickness },
         { x: offsetX + zWidth, y: offsetY + zHeight - thickness },
         { x: offsetX + zWidth, y: offsetY + zHeight },
         { x: offsetX, y: offsetY + zHeight },
         { x: offsetX, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth - thickness * 1.5, y: offsetY + thickness },
+        { x: offsetX + zWidth - thickness * 1.8, y: offsetY + thickness },
         { x: offsetX, y: offsetY + thickness },
       ];
       
@@ -125,9 +121,10 @@ const ParticleZAnimation = () => {
         return inside;
       }
       
+      // Only add points that are visible on screen
       for (let x = offsetX; x < offsetX + zWidth; x += spacing) {
         for (let y = offsetY; y < offsetY + zHeight; y += spacing) {
-          if (isPointInPolygon(x, y, zPolygon)) {
+          if (x <= canvasWidth && isPointInPolygon(x, y, zPolygon)) {
             points.push({ x, y });
           }
         }
@@ -137,8 +134,8 @@ const ParticleZAnimation = () => {
     }
 
     const zPoints = createZPoints(canvas.width, canvas.height);
-    const particles = zPoints.map((point, i) => 
-      new Particle(point.x, point.y, canvas.width, canvas.height, i, zPoints.length)
+    const particles = zPoints.map((point) => 
+      new Particle(point.x, point.y, canvas.width, canvas.height)
     );
     
     let forming = false;
@@ -152,7 +149,7 @@ const ParticleZAnimation = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       if (forming) {
-        formingTime += 0.016; // ~60fps increment
+        formingTime += 0.016;
       }
       
       particles.forEach(particle => {
