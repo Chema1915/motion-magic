@@ -102,7 +102,7 @@ const ParticleZAnimation = () => {
       const zHeight = 1.0; // Full height from top to bottom
       const offsetX = 0.45;
       const offsetY = 0; // Start from top
-      const thickness = 0.07;
+      const thickness = 0.12;
       const spacing = 0.002; // Much denser spacing for tiny circles
       
       // Calculate diagonal angle to make bars same visual width
