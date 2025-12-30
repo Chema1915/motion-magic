@@ -98,7 +98,7 @@ const ParticleZAnimation = () => {
     function createZRelativePoints() {
       const points: { x: number; y: number }[] = [];
       
-      const zWidth = 0.7;
+      const zWidth = 0.4; // 40% of page width
       const zHeight = 1.0; // Full height from top to bottom
       const offsetX = 0.45;
       const offsetY = 0; // Start from top
