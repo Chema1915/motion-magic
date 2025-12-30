@@ -33,7 +33,7 @@ class Particle {
     this.vy = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
     // Size scales with screen - starts small, grows when forming
     const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
-    this.baseSize = isBackground ? 1.5 * scaleFactor : 1.2 * scaleFactor;
+    this.baseSize = isBackground ? 1.5 * scaleFactor : 1.8 * scaleFactor;
     this.finalSize = isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
     this.size = this.baseSize;
     this.color = isBackground ? '#9CA3AF' : '#D1D5DB';
@@ -50,7 +50,7 @@ class Particle {
     this.targetY = this.relativeTargetY * canvasHeight;
     // Update size on resize
     const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
-    this.baseSize = this.isBackground ? 1.5 * scaleFactor : 1.2 * scaleFactor;
+    this.baseSize = this.isBackground ? 1.5 * scaleFactor : 1.8 * scaleFactor;
     this.finalSize = this.isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
   }
 
