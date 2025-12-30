@@ -7,8 +7,8 @@ const Header = () => {
   // Background opacity based on scroll
   const headerBg = useTransform(scrollY, [0, 300], [0, 0.95]);
   
-  // Header logo appears only after hero logo fades (synced with hero's logoOpacity)
-  const headerLogoOpacity = useTransform(scrollY, [200, 280], [0, 1]);
+  // Header logo appears exactly when hero logo fades - smooth crossfade
+  const headerLogoOpacity = useTransform(scrollY, [220, 300], [0, 1]);
 
   return (
     <motion.header
