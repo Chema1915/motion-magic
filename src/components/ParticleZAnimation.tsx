@@ -12,29 +12,48 @@ class Particle {
   progress: number;
   canvasWidth: number;
   canvasHeight: number;
+  delay: number;
+  speed: number;
 
-  constructor(targetX: number, targetY: number, canvasWidth: number, canvasHeight: number) {
+  constructor(targetX: number, targetY: number, canvasWidth: number, canvasHeight: number, index: number, total: number) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.x = Math.random() * canvasWidth;
     this.y = Math.random() * canvasHeight;
     this.targetX = targetX;
     this.targetY = targetY;
-    this.vx = (Math.random() - 0.5) * 1.2;
-    this.vy = (Math.random() - 0.5) * 1.2;
+    this.vx = (Math.random() - 0.5) * 1.5;
+    this.vy = (Math.random() - 0.5) * 1.5;
     this.size = 2.5;
     this.color = '#D1D5DB';
     this.progress = 0;
+    // Staggered delay based on position for wave effect
+    this.delay = Math.random() * 0.4 + (targetY / canvasHeight) * 0.3;
+    this.speed = 0.003 + Math.random() * 0.004;
   }
 
-  update(forming: boolean) {
+  update(forming: boolean, time: number) {
     if (forming) {
-      this.progress += 0.008;
-      if (this.progress > 1) this.progress = 1;
-      
-      const eased = this.easeInOutCubic(this.progress);
-      this.x += (this.targetX - this.x) * eased * 0.06;
-      this.y += (this.targetY - this.y) * eased * 0.06;
+      const adjustedTime = Math.max(0, time - this.delay);
+      if (adjustedTime > 0) {
+        this.progress += this.speed;
+        if (this.progress > 1) this.progress = 1;
+        
+        const eased = this.easeOutExpo(this.progress);
+        
+        // Add subtle organic wobble during movement
+        const wobble = Math.sin(time * 3 + this.delay * 10) * (1 - this.progress) * 2;
+        
+        this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
+        this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+      } else {
+        // Still in chaos phase
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
+        if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
+      }
     } else {
       this.x += this.vx;
       this.y += this.vy;
@@ -51,8 +70,9 @@ class Particle {
     ctx.fill();
   }
 
-  easeInOutCubic(t: number): number {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  // Smoother, more organic easing
+  easeOutExpo(t: number): number {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
   }
 }
 
@@ -79,27 +99,19 @@ const ParticleZAnimation = () => {
       const thickness = 55;
       const spacing = 5;
       
-      // Create a proper Z shape like typography
-      // The Z is defined as a polygon with these vertices:
-      // Top bar: top-left, top-right, then down to diagonal start
-      // Diagonal: goes from top-right area to bottom-left area
-      // Bottom bar: bottom-left, bottom-right
-      
-      // Define the Z polygon vertices (clockwise from top-left)
       const zPolygon = [
-        { x: offsetX, y: offsetY },                                           // Top-left outer
-        { x: offsetX + zWidth, y: offsetY },                                  // Top-right outer
-        { x: offsetX + zWidth, y: offsetY + thickness },                      // Top-right inner (start of diagonal)
-        { x: offsetX + thickness * 1.5, y: offsetY + zHeight - thickness },   // Bottom-left diagonal end
-        { x: offsetX + zWidth, y: offsetY + zHeight - thickness },            // Bottom-right inner
-        { x: offsetX + zWidth, y: offsetY + zHeight },                        // Bottom-right outer
-        { x: offsetX, y: offsetY + zHeight },                                 // Bottom-left outer
-        { x: offsetX, y: offsetY + zHeight - thickness },                     // Bottom-left inner (start of diagonal)
-        { x: offsetX + zWidth - thickness * 1.5, y: offsetY + thickness },    // Top-right diagonal end
-        { x: offsetX, y: offsetY + thickness },                               // Top-left inner
+        { x: offsetX, y: offsetY },
+        { x: offsetX + zWidth, y: offsetY },
+        { x: offsetX + zWidth, y: offsetY + thickness },
+        { x: offsetX + thickness * 1.5, y: offsetY + zHeight - thickness },
+        { x: offsetX + zWidth, y: offsetY + zHeight - thickness },
+        { x: offsetX + zWidth, y: offsetY + zHeight },
+        { x: offsetX, y: offsetY + zHeight },
+        { x: offsetX, y: offsetY + zHeight - thickness },
+        { x: offsetX + zWidth - thickness * 1.5, y: offsetY + thickness },
+        { x: offsetX, y: offsetY + thickness },
       ];
       
-      // Fill the polygon with points using a point-in-polygon test
       function isPointInPolygon(x: number, y: number, polygon: {x: number, y: number}[]): boolean {
         let inside = false;
         for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -113,7 +125,6 @@ const ParticleZAnimation = () => {
         return inside;
       }
       
-      // Sample points within the bounding box and keep those inside the polygon
       for (let x = offsetX; x < offsetX + zWidth; x += spacing) {
         for (let y = offsetY; y < offsetY + zHeight; y += spacing) {
           if (isPointInPolygon(x, y, zPolygon)) {
@@ -126,18 +137,26 @@ const ParticleZAnimation = () => {
     }
 
     const zPoints = createZPoints(canvas.width, canvas.height);
-    const particles = zPoints.map(point => new Particle(point.x, point.y, canvas.width, canvas.height));
+    const particles = zPoints.map((point, i) => 
+      new Particle(point.x, point.y, canvas.width, canvas.height, i, zPoints.length)
+    );
     
     let forming = false;
-    const timeout = setTimeout(() => { forming = true; }, 800);
+    let formingTime = 0;
+    const timeout = setTimeout(() => { forming = true; }, 1000);
 
     let animationId: number;
 
     function animate() {
       if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (forming) {
+        formingTime += 0.016; // ~60fps increment
+      }
+      
       particles.forEach(particle => {
-        particle.update(forming);
+        particle.update(forming, formingTime);
         particle.draw(ctx);
       });
       animationId = requestAnimationFrame(animate);
