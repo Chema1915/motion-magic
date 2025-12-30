@@ -99,9 +99,9 @@ const ParticleZAnimation = () => {
       const points: { x: number; y: number }[] = [];
       
       const zWidth = 0.7;
-      const zHeight = 0.85;
+      const zHeight = 1.0; // Full height from top to bottom
       const offsetX = 0.45;
-      const offsetY = (1 - zHeight) / 2;
+      const offsetY = 0; // Start from top
       const thickness = 0.07;
       const spacing = 0.002; // Much denser spacing for tiny circles
       
