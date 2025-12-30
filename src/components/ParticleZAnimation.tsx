@@ -42,7 +42,7 @@ class Particle {
     this.targetY = this.relativeTargetY * canvasHeight;
   }
 
-  update(forming: boolean, time: number, mouse: { x: number; y: number; pressed: boolean }) {
+  update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
     const mouseRadius = 120; // Radius of mouse influence
     
     // Calculate distance from mouse
@@ -50,17 +50,22 @@ class Particle {
     const dy = this.y - mouse.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    // If mouse is pressed and near particle, reset to random movement
+    // If mouse is pressed and near particle, fling in mouse direction
     if (mouse.pressed && dist < mouseRadius) {
-      // Give random velocity like initial state
-      this.vx = (Math.random() - 0.5) * 3;
-      this.vy = (Math.random() - 0.5) * 3;
+      // Add mouse velocity to particle (fling effect)
+      const force = 2.5;
+      this.vx = mouse.vx * force + (Math.random() - 0.5) * 2;
+      this.vy = mouse.vy * force + (Math.random() - 0.5) * 2;
       this.progress = 0; // Reset progress so it animates back
     }
     
     // Apply velocity
     this.x += this.vx;
     this.y += this.vy;
+    
+    // Friction
+    this.vx *= 0.98;
+    this.vy *= 0.98;
     
     // Bounce off walls
     if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
@@ -176,12 +181,16 @@ const ParticleZAnimation = () => {
     let formingTime = 0;
     const timeout = setTimeout(() => { forming = true; }, 1000);
 
-    // Mouse tracking
-    const mouse = { x: 0, y: 0, pressed: false };
+    // Mouse tracking with velocity
+    const mouse = { x: 0, y: 0, prevX: 0, prevY: 0, vx: 0, vy: 0, pressed: false };
     
     const handleMouseMove = (e: MouseEvent) => {
+      mouse.prevX = mouse.x;
+      mouse.prevY = mouse.y;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      mouse.vx = mouse.x - mouse.prevX;
+      mouse.vy = mouse.y - mouse.prevY;
     };
     
     const handleMouseDown = () => {
