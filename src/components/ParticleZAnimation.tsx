@@ -16,8 +16,9 @@ class Particle {
   speed: number;
   relativeTargetX: number;
   relativeTargetY: number;
+  isBackground: boolean; // New: marks if particle stays floating
 
-  constructor(relativeX: number, relativeY: number, canvasWidth: number, canvasHeight: number) {
+  constructor(relativeX: number, relativeY: number, canvasWidth: number, canvasHeight: number, isBackground: boolean = false) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.relativeTargetX = relativeX;
@@ -26,13 +27,14 @@ class Particle {
     this.targetY = relativeY * canvasHeight;
     this.x = Math.random() * canvasWidth;
     this.y = Math.random() * canvasHeight;
-    this.vx = (Math.random() - 0.5) * 1.5;
-    this.vy = (Math.random() - 0.5) * 1.5;
-    this.size = 1.8;
-    this.color = '#D1D5DB';
+    this.vx = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
+    this.vy = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
+    this.size = isBackground ? 1.2 : 1.8;
+    this.color = isBackground ? '#9CA3AF' : '#D1D5DB';
     this.progress = 0;
-    this.delay = Math.random() * 0.2 + relativeY * 0.15; // Shorter delays
-    this.speed = 0.008 + Math.random() * 0.006; // Faster speed
+    this.delay = Math.random() * 0.2 + relativeY * 0.15;
+    this.speed = 0.008 + Math.random() * 0.006;
+    this.isBackground = isBackground;
   }
 
   updateCanvasSize(canvasWidth: number, canvasHeight: number) {
@@ -43,6 +45,21 @@ class Particle {
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
+    // Background particles always float randomly
+    if (this.isBackground) {
+      this.x += this.vx;
+      this.y += this.vy;
+      
+      // Bounce off walls
+      if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
+      if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
+      
+      // Keep within bounds
+      this.x = Math.max(0, Math.min(this.canvasWidth, this.x));
+      this.y = Math.max(0, Math.min(this.canvasHeight, this.y));
+      return;
+    }
+    
     const mouseRadius = 60; // Radius of mouse influence
     
     // Calculate distance from mouse
@@ -176,9 +193,20 @@ const ParticleZAnimation = () => {
     }
 
     const zRelativePoints = createZRelativePoints();
-    const particles = zRelativePoints.map((point) => 
-      new Particle(point.x, point.y, canvas.width, canvas.height)
+    const zParticles = zRelativePoints.map((point) => 
+      new Particle(point.x, point.y, canvas.width, canvas.height, false)
     );
+    
+    // Create background floating particles
+    const backgroundParticleCount = 150;
+    const backgroundParticles: Particle[] = [];
+    for (let i = 0; i < backgroundParticleCount; i++) {
+      backgroundParticles.push(
+        new Particle(Math.random(), Math.random(), canvas.width, canvas.height, true)
+      );
+    }
+    
+    const particles = [...backgroundParticles, ...zParticles];
     
     let forming = false;
     let formingTime = 0;
