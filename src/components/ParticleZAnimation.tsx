@@ -43,7 +43,7 @@ class Particle {
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
-    const mouseRadius = 120; // Radius of mouse influence
+    const mouseRadius = 60; // Radius of mouse influence
     
     // Calculate distance from mouse
     const dx = this.x - mouse.x;
