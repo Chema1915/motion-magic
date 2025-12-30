@@ -31,8 +31,8 @@ class Particle {
     this.size = 1.2; // Much smaller circles
     this.color = '#D1D5DB';
     this.progress = 0;
-    this.delay = Math.random() * 0.5 + relativeY * 0.3;
-    this.speed = 0.003 + Math.random() * 0.004;
+    this.delay = Math.random() * 0.2 + relativeY * 0.15; // Shorter delays
+    this.speed = 0.008 + Math.random() * 0.006; // Faster speed
   }
 
   updateCanvasSize(canvasWidth: number, canvasHeight: number) {
