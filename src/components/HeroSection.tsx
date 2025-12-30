@@ -19,7 +19,7 @@ const HeroSection = () => {
   const logoOpacity = useTransform(scrollYProgress, [0.25, 0.32], [1, 0]);
 
   return (
-    <section ref={ref} className="h-[100dvh] flex items-center justify-center bg-secondary relative overflow-hidden">
+    <section ref={ref} className="h-[100dvh] flex items-center justify-center bg-secondary relative overflow-hidden xl:pt-20">
       <ParticleZAnimation />
       
       <div className="text-center px-6 relative z-10 flex flex-col items-center justify-center">
