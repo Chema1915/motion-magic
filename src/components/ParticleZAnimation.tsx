@@ -98,9 +98,9 @@ const ParticleZAnimation = () => {
     function createZRelativePoints() {
       const points: { x: number; y: number }[] = [];
       
-      const zWidth = 0.65; // Wider Z
+      const zWidth = 0.85; // Wide enough to extend past screen
       const zHeight = 1.0; // Full height from top to bottom
-      const offsetX = 0.72; // Push to right edge, partially visible
+      const offsetX = 0.35; // Starts at 35%, extends past right edge
       const offsetY = 0; // Start from top
       const thickness = 0.12;
       const spacing = 0.002; // Much denser spacing for tiny circles
