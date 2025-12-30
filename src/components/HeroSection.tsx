@@ -22,7 +22,7 @@ const HeroSection = () => {
     <section ref={ref} className="min-h-[100dvh] flex items-center justify-center bg-secondary relative overflow-hidden pt-20">
       <ParticleZAnimation />
       
-      <div className="text-center px-6 relative z-10 pt-8">
+      <div className="text-center px-6 relative z-10 pt-4 md:pt-8">
         {/* Hero Logo - animates up to header, starts below header on all screens */}
         <motion.div 
           style={{ 
@@ -30,10 +30,10 @@ const HeroSection = () => {
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-16 flex flex-col items-center"
+          className="mb-8 md:mb-16 flex flex-col items-center"
         >
           {/* Logo box */}
-          <div className="w-[15vw] h-[15vw] min-w-[100px] min-h-[100px] max-w-[160px] max-h-[160px] bg-primary flex items-center justify-center">
+          <div className="w-[12vw] h-[12vw] min-w-[80px] min-h-[80px] max-w-[160px] max-h-[160px] bg-primary flex items-center justify-center">
             <svg viewBox="0 0 100 100" className="w-full h-full p-3">
               <polygon
                 points="15,15 85,15 85,30 40,30 85,70 85,85 15,85 15,70 60,70 15,30"
@@ -46,10 +46,9 @@ const HeroSection = () => {
           {/* Text - fades out first */}
           <motion.div 
             style={{ opacity: textOpacity }}
-            className="mt-3 font-light tracking-tight text-foreground"
-            // Responsive text size
+            className="mt-2 md:mt-3 font-light tracking-tight text-foreground"
           >
-            <span style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}>Zolve</span>
+            <span style={{ fontSize: 'clamp(1.2rem, 3vw, 3rem)' }}>Zolve</span>
           </motion.div>
         </motion.div>
         
@@ -57,7 +56,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-6xl md:text-7xl lg:text-8xl font-display font-light mb-8 text-foreground leading-tight"
+          className="text-4xl md:text-6xl lg:text-8xl font-display font-light mb-4 md:mb-8 text-foreground leading-tight"
         >
           Dale valor
           <br />
@@ -68,7 +67,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 font-light"
+          className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto mb-6 md:mb-12 font-light"
         >
           No vendemos automatizaciones,
           <br />
