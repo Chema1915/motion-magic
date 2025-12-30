@@ -14,21 +14,32 @@ class Particle {
   canvasHeight: number;
   delay: number;
   speed: number;
+  relativeTargetX: number;
+  relativeTargetY: number;
 
-  constructor(targetX: number, targetY: number, canvasWidth: number, canvasHeight: number) {
+  constructor(relativeX: number, relativeY: number, canvasWidth: number, canvasHeight: number) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
+    this.relativeTargetX = relativeX;
+    this.relativeTargetY = relativeY;
+    this.targetX = relativeX * canvasWidth;
+    this.targetY = relativeY * canvasHeight;
     this.x = Math.random() * canvasWidth;
     this.y = Math.random() * canvasHeight;
-    this.targetX = targetX;
-    this.targetY = targetY;
     this.vx = (Math.random() - 0.5) * 1.5;
     this.vy = (Math.random() - 0.5) * 1.5;
     this.size = 2;
     this.color = '#D1D5DB';
     this.progress = 0;
-    this.delay = Math.random() * 0.5 + (targetY / canvasHeight) * 0.3;
+    this.delay = Math.random() * 0.5 + relativeY * 0.3;
     this.speed = 0.003 + Math.random() * 0.004;
+  }
+
+  updateCanvasSize(canvasWidth: number, canvasHeight: number) {
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
+    this.targetX = this.relativeTargetX * canvasWidth;
+    this.targetY = this.relativeTargetY * canvasHeight;
   }
 
   update(forming: boolean, time: number) {
@@ -84,27 +95,28 @@ const ParticleZAnimation = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    function createZPoints(canvasWidth: number, canvasHeight: number) {
+    // Create Z points using relative coordinates (0-1)
+    function createZRelativePoints() {
       const points: { x: number; y: number }[] = [];
       
-      // Z positioned on the right, partially off-screen
-      const zWidth = canvasWidth * 0.7;
-      const zHeight = canvasHeight * 0.85;
-      const offsetX = canvasWidth * 0.45; // Push to the right
-      const offsetY = (canvasHeight - zHeight) / 2;
-      const thickness = 80;
-      const spacing = 3.5; // Much denser for almost solid appearance
+      // Z positioned on the right, partially off-screen (relative values)
+      const zWidth = 0.7;
+      const zHeight = 0.85;
+      const offsetX = 0.45;
+      const offsetY = (1 - zHeight) / 2;
+      const thickness = 0.08;
+      const spacing = 0.004; // Relative spacing
       
       const zPolygon = [
         { x: offsetX, y: offsetY },
         { x: offsetX + zWidth, y: offsetY },
         { x: offsetX + zWidth, y: offsetY + thickness },
-        { x: offsetX + thickness * 1.8, y: offsetY + zHeight - thickness },
+        { x: offsetX + thickness * 2.2, y: offsetY + zHeight - thickness },
         { x: offsetX + zWidth, y: offsetY + zHeight - thickness },
         { x: offsetX + zWidth, y: offsetY + zHeight },
         { x: offsetX, y: offsetY + zHeight },
         { x: offsetX, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth - thickness * 1.8, y: offsetY + thickness },
+        { x: offsetX + zWidth - thickness * 2.2, y: offsetY + thickness },
         { x: offsetX, y: offsetY + thickness },
       ];
       
@@ -121,10 +133,10 @@ const ParticleZAnimation = () => {
         return inside;
       }
       
-      // Only add points that are visible on screen
+      // Only add points that would be visible on screen (x <= 1)
       for (let x = offsetX; x < offsetX + zWidth; x += spacing) {
         for (let y = offsetY; y < offsetY + zHeight; y += spacing) {
-          if (x <= canvasWidth && isPointInPolygon(x, y, zPolygon)) {
+          if (x <= 1 && isPointInPolygon(x, y, zPolygon)) {
             points.push({ x, y });
           }
         }
@@ -133,8 +145,8 @@ const ParticleZAnimation = () => {
       return points;
     }
 
-    const zPoints = createZPoints(canvas.width, canvas.height);
-    const particles = zPoints.map((point) => 
+    const zRelativePoints = createZRelativePoints();
+    const particles = zRelativePoints.map((point) => 
       new Particle(point.x, point.y, canvas.width, canvas.height)
     );
     
@@ -165,6 +177,11 @@ const ParticleZAnimation = () => {
       if (!canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      
+      // Update all particles with new canvas size
+      particles.forEach(particle => {
+        particle.updateCanvasSize(canvas.width, canvas.height);
+      });
     };
 
     window.addEventListener('resize', handleResize);
