@@ -8,8 +8,6 @@ class Particle {
   vx: number;
   vy: number;
   size: number;
-  baseSize: number;
-  finalSize: number;
   color: string;
   progress: number;
   canvasWidth: number;
@@ -30,9 +28,7 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.vx = (Math.random() - 0.5) * 1.5;
     this.vy = (Math.random() - 0.5) * 1.5;
-    this.baseSize = 1.8;
-    this.finalSize = 3.2; // Grows to fill gaps when formed
-    this.size = this.baseSize;
+    this.size = 1.8;
     this.color = '#D1D5DB';
     this.progress = 0;
     this.delay = Math.random() * 0.2 + relativeY * 0.15; // Shorter delays
@@ -47,8 +43,32 @@ class Particle {
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; pressed: boolean }) {
-    const mouseRadius = 80; // Radius of mouse influence
-    const mouseForce = 8; // How strongly particles are pushed
+    const mouseRadius = 100; // Radius of mouse influence
+    const mouseForce = 15; // How strongly particles are pushed
+    
+    // Calculate distance from mouse
+    const dx = this.x - mouse.x;
+    const dy = this.y - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    // Apply mouse repulsion if pressed and within radius - works like sand
+    if (mouse.pressed && dist < mouseRadius && dist > 0) {
+      const force = (mouseRadius - dist) / mouseRadius * mouseForce;
+      this.vx += (dx / dist) * force * 0.3;
+      this.vy += (dy / dist) * force * 0.3;
+    }
+    
+    // Apply velocity with friction
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vx *= 0.92; // Friction
+    this.vy *= 0.92;
+    
+    // Bounce off walls
+    if (this.x < 0) { this.x = 0; this.vx *= -0.5; }
+    if (this.x > this.canvasWidth) { this.x = this.canvasWidth; this.vx *= -0.5; }
+    if (this.y < 0) { this.y = 0; this.vy *= -0.5; }
+    if (this.y > this.canvasHeight) { this.y = this.canvasHeight; this.vy *= -0.5; }
     
     if (forming) {
       const adjustedTime = Math.max(0, time - this.delay);
@@ -56,49 +76,13 @@ class Particle {
         this.progress += this.speed;
         if (this.progress > 1) this.progress = 1;
         
-        const eased = this.easeOutExpo(this.progress);
-        const wobble = Math.sin(time * 3 + this.delay * 10) * (1 - this.progress) * 2;
-        
-        // Calculate distance from mouse
-        const dx = this.x - mouse.x;
-        const dy = this.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        // Apply mouse repulsion if pressed and within radius
-        if (mouse.pressed && dist < mouseRadius && dist > 0) {
-          const force = (mouseRadius - dist) / mouseRadius * mouseForce;
-          this.x += (dx / dist) * force;
-          this.y += (dy / dist) * force;
-        } else {
-          // Move towards target when not being pushed
-          this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
-          this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        // Gently pull back to target position when not being pushed
+        if (!mouse.pressed) {
+          const returnForce = 0.03;
+          this.vx += (this.targetX - this.x) * returnForce;
+          this.vy += (this.targetY - this.y) * returnForce;
         }
-        
-        // Always try to return to target position (softer when pushed)
-        if (!mouse.pressed || dist >= mouseRadius) {
-          this.x += (this.targetX - this.x) * 0.08;
-          this.y += (this.targetY - this.y) * 0.08;
-        }
-        
-        // Only grow when almost in final position (after 80% progress)
-        if (this.progress > 0.8) {
-          const growthProgress = (this.progress - 0.8) / 0.2;
-          this.size = this.baseSize + (this.finalSize - this.baseSize) * growthProgress;
-        }
-      } else {
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
-        if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
       }
-    } else {
-      this.x += this.vx;
-      this.y += this.vy;
-      
-      if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
-      if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
     }
   }
 
