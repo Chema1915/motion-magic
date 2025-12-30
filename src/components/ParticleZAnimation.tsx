@@ -95,49 +95,59 @@ const ParticleZAnimation = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Create Z points using relative coordinates (0-1)
     function createZRelativePoints() {
       const points: { x: number; y: number }[] = [];
       
-      // Z positioned on the right, partially off-screen (relative values)
       const zWidth = 0.7;
       const zHeight = 0.85;
       const offsetX = 0.45;
       const offsetY = (1 - zHeight) / 2;
-      const thickness = 0.08;
-      const spacing = 0.004; // Relative spacing
+      const thickness = 0.07; // Uniform thickness for all bars
+      const spacing = 0.0035;
       
-      const zPolygon = [
-        { x: offsetX, y: offsetY },
-        { x: offsetX + zWidth, y: offsetY },
-        { x: offsetX + zWidth, y: offsetY + thickness },
-        { x: offsetX + thickness * 2.2, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth, y: offsetY + zHeight },
-        { x: offsetX, y: offsetY + zHeight },
-        { x: offsetX, y: offsetY + zHeight - thickness },
-        { x: offsetX + zWidth - thickness * 2.2, y: offsetY + thickness },
-        { x: offsetX, y: offsetY + thickness },
-      ];
-      
-      function isPointInPolygon(x: number, y: number, polygon: {x: number, y: number}[]): boolean {
-        let inside = false;
-        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-          const xi = polygon[i].x, yi = polygon[i].y;
-          const xj = polygon[j].x, yj = polygon[j].y;
-          
-          if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
-            inside = !inside;
-          }
+      // Top bar - horizontal rectangle
+      for (let x = offsetX; x <= Math.min(1, offsetX + zWidth); x += spacing) {
+        for (let y = offsetY; y <= offsetY + thickness; y += spacing) {
+          points.push({ x, y });
         }
-        return inside;
       }
       
-      // Only add points that would be visible on screen (x <= 1)
-      for (let x = offsetX; x < offsetX + zWidth; x += spacing) {
-        for (let y = offsetY; y < offsetY + zHeight; y += spacing) {
-          if (x <= 1 && isPointInPolygon(x, y, zPolygon)) {
-            points.push({ x, y });
+      // Bottom bar - horizontal rectangle
+      for (let x = offsetX; x <= Math.min(1, offsetX + zWidth); x += spacing) {
+        for (let y = offsetY + zHeight - thickness; y <= offsetY + zHeight; y += spacing) {
+          points.push({ x, y });
+        }
+      }
+      
+      // Diagonal - with perpendicular thickness for uniform width
+      const diagStartX = offsetX + zWidth;
+      const diagStartY = offsetY + thickness;
+      const diagEndX = offsetX;
+      const diagEndY = offsetY + zHeight - thickness;
+      
+      const diagLength = Math.sqrt(
+        Math.pow(diagEndX - diagStartX, 2) + Math.pow(diagEndY - diagStartY, 2)
+      );
+      const diagAngle = Math.atan2(diagEndY - diagStartY, diagEndX - diagStartX);
+      const perpAngle = diagAngle + Math.PI / 2;
+      
+      const steps = Math.floor(diagLength / spacing);
+      const halfThickness = thickness / 2;
+      
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const centerX = diagStartX + (diagEndX - diagStartX) * t;
+        const centerY = diagStartY + (diagEndY - diagStartY) * t;
+        
+        // Add points perpendicular to the diagonal
+        const perpSteps = Math.floor(thickness / spacing);
+        for (let j = 0; j <= perpSteps; j++) {
+          const offset = -halfThickness + (j / perpSteps) * thickness;
+          const px = centerX + Math.cos(perpAngle) * offset;
+          const py = centerY + Math.sin(perpAngle) * offset;
+          
+          if (px <= 1 && px >= 0 && py >= 0 && py <= 1) {
+            points.push({ x: px, y: py });
           }
         }
       }
@@ -178,7 +188,6 @@ const ParticleZAnimation = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       
-      // Update all particles with new canvas size
       particles.forEach(particle => {
         particle.updateCanvasSize(canvas.width, canvas.height);
       });
