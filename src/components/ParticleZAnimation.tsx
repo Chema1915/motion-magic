@@ -72,50 +72,53 @@ const ParticleZAnimation = () => {
     function createZPoints(canvasWidth: number, canvasHeight: number) {
       const points: { x: number; y: number }[] = [];
       
-      // Center the Z in the canvas
-      const zWidth = canvasWidth * 0.55;
-      const zHeight = canvasHeight * 0.6;
+      const zWidth = canvasWidth * 0.5;
+      const zHeight = canvasHeight * 0.55;
       const offsetX = (canvasWidth - zWidth) / 2;
       const offsetY = (canvasHeight - zHeight) / 2;
-      const thickness = 65;
+      const thickness = 55;
       const spacing = 5;
       
-      // Top bar
-      for (let x = 0; x < zWidth; x += spacing) {
-        for (let y = 0; y < thickness; y += spacing) {
-          points.push({ x: offsetX + x, y: offsetY + y });
+      // Create a proper Z shape like typography
+      // The Z is defined as a polygon with these vertices:
+      // Top bar: top-left, top-right, then down to diagonal start
+      // Diagonal: goes from top-right area to bottom-left area
+      // Bottom bar: bottom-left, bottom-right
+      
+      // Define the Z polygon vertices (clockwise from top-left)
+      const zPolygon = [
+        { x: offsetX, y: offsetY },                                           // Top-left outer
+        { x: offsetX + zWidth, y: offsetY },                                  // Top-right outer
+        { x: offsetX + zWidth, y: offsetY + thickness },                      // Top-right inner (start of diagonal)
+        { x: offsetX + thickness * 1.5, y: offsetY + zHeight - thickness },   // Bottom-left diagonal end
+        { x: offsetX + zWidth, y: offsetY + zHeight - thickness },            // Bottom-right inner
+        { x: offsetX + zWidth, y: offsetY + zHeight },                        // Bottom-right outer
+        { x: offsetX, y: offsetY + zHeight },                                 // Bottom-left outer
+        { x: offsetX, y: offsetY + zHeight - thickness },                     // Bottom-left inner (start of diagonal)
+        { x: offsetX + zWidth - thickness * 1.5, y: offsetY + thickness },    // Top-right diagonal end
+        { x: offsetX, y: offsetY + thickness },                               // Top-left inner
+      ];
+      
+      // Fill the polygon with points using a point-in-polygon test
+      function isPointInPolygon(x: number, y: number, polygon: {x: number, y: number}[]): boolean {
+        let inside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+          const xi = polygon[i].x, yi = polygon[i].y;
+          const xj = polygon[j].x, yj = polygon[j].y;
+          
+          if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+            inside = !inside;
+          }
         }
+        return inside;
       }
       
-      // Diagonal - perpendicular thickness for uniform appearance
-      const diagonalLength = Math.sqrt(zWidth * zWidth + (zHeight - thickness * 2) * (zHeight - thickness * 2));
-      const angle = Math.atan2(zHeight - thickness * 2, -zWidth);
-      const perpAngle = angle + Math.PI / 2;
-      
-      const diagonalSteps = Math.floor(diagonalLength / spacing);
-      for (let i = 0; i <= diagonalSteps; i++) {
-        const progress = i / diagonalSteps;
-        // Start from right, go to left
-        const centerX = offsetX + zWidth - (zWidth * progress);
-        const centerY = offsetY + thickness + (zHeight - thickness * 2) * progress;
-        
-        // Add particles perpendicular to the diagonal
-        const halfThickness = thickness / 2;
-        for (let t = -halfThickness; t < halfThickness; t += spacing) {
-          points.push({
-            x: centerX + Math.cos(perpAngle) * t,
-            y: centerY + Math.sin(perpAngle) * t
-          });
-        }
-      }
-      
-      // Bottom bar
-      for (let x = 0; x < zWidth; x += spacing) {
-        for (let y = 0; y < thickness; y += spacing) {
-          points.push({
-            x: offsetX + x,
-            y: offsetY + zHeight - thickness + y
-          });
+      // Sample points within the bounding box and keep those inside the polygon
+      for (let x = offsetX; x < offsetX + zWidth; x += spacing) {
+        for (let y = offsetY; y < offsetY + zHeight; y += spacing) {
+          if (isPointInPolygon(x, y, zPolygon)) {
+            points.push({ x, y });
+          }
         }
       }
       
