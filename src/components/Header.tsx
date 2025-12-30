@@ -46,14 +46,26 @@ const Header = () => {
           </motion.div>
         </Link>
 
-        <nav className="flex items-center gap-8">
-          <Link to="/catalogo" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">
+        <nav className="flex items-center" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)' }}>
+          <Link 
+            to="/catalogo" 
+            className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+            style={{ fontSize: 'clamp(0.875rem, 1.2vw, 1.25rem)' }}
+          >
             Catálogo
           </Link>
-          <Link to="/nosotros" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">
+          <Link 
+            to="/nosotros" 
+            className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+            style={{ fontSize: 'clamp(0.875rem, 1.2vw, 1.25rem)' }}
+          >
             Nosotros
           </Link>
-          <Link to="/soporte" className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200">
+          <Link 
+            to="/soporte" 
+            className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+            style={{ fontSize: 'clamp(0.875rem, 1.2vw, 1.25rem)' }}
+          >
             Soporte
           </Link>
         </nav>
