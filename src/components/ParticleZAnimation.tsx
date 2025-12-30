@@ -100,7 +100,7 @@ const ParticleZAnimation = () => {
       
       const zWidth = 0.85; // Wide enough to extend past screen
       const zHeight = 1.0; // Full height from top to bottom
-      const offsetX = 0.35; // Starts at 35%, extends past right edge
+      const offsetX = 0.55; // Starts at 55%, visible portion is 45%
       const offsetY = 0; // Start from top
       const thickness = 0.12;
       const spacing = 0.002; // Much denser spacing for tiny circles
