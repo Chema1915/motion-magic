@@ -19,10 +19,10 @@ const HeroSection = () => {
   const logoOpacity = useTransform(scrollYProgress, [0.25, 0.32], [1, 0]);
 
   return (
-    <section ref={ref} className="min-h-screen flex items-center justify-center bg-secondary relative overflow-hidden">
+    <section ref={ref} className="min-h-screen flex items-center justify-center bg-secondary relative overflow-hidden pt-20">
       <ParticleZAnimation />
       
-      <div className="text-center px-6 relative z-10">
+      <div className="text-center px-6 relative z-10 pt-8">
         {/* Hero Logo - animates up to header, starts below header on all screens */}
         <motion.div 
           style={{ 
@@ -30,7 +30,7 @@ const HeroSection = () => {
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-16 flex flex-col items-center mt-16 md:mt-0"
+          className="mb-16 flex flex-col items-center"
         >
           {/* Logo box */}
           <div className="w-[15vw] h-[15vw] min-w-[100px] min-h-[100px] max-w-[160px] max-h-[160px] bg-primary flex items-center justify-center">
