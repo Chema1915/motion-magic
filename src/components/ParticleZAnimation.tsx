@@ -45,16 +45,37 @@ class Particle {
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
-    // Background particles always float randomly
+    // Background particles float randomly but can also be pushed
     if (this.isBackground) {
+      const mouseRadius = 25;
+      const dx = this.x - mouse.x;
+      const dy = this.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      
+      // Allow mouse interaction for background particles too
+      if (mouse.pressed && dist < mouseRadius) {
+        const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 2.5;
+        const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+        const force = (speed * 1.5 + 3) * (0.5 + Math.random());
+        this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 4;
+        this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 4;
+      }
+      
       this.x += this.vx;
       this.y += this.vy;
+      
+      // Friction for background
+      this.vx *= 0.995;
+      this.vy *= 0.995;
+      
+      // Maintain minimum velocity for continuous floating
+      if (Math.abs(this.vx) < 0.3) this.vx = (Math.random() - 0.5) * 0.8;
+      if (Math.abs(this.vy) < 0.3) this.vy = (Math.random() - 0.5) * 0.8;
       
       // Bounce off walls
       if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
       if (this.y < 0 || this.y > this.canvasHeight) this.vy *= -1;
       
-      // Keep within bounds
       this.x = Math.max(0, Math.min(this.canvasWidth, this.x));
       this.y = Math.max(0, Math.min(this.canvasHeight, this.y));
       return;
