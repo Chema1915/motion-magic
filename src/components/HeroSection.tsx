@@ -23,14 +23,14 @@ const HeroSection = () => {
       <ParticleZAnimation />
       
       <div className="text-center px-6 relative z-10">
-        {/* Hero Logo - animates up to header */}
+        {/* Hero Logo - animates up to header, starts below header on all screens */}
         <motion.div 
           style={{ 
             y: logoY,
             scale: logoScale,
             opacity: logoOpacity,
           }}
-          className="mb-16 flex flex-col items-center"
+          className="mb-16 flex flex-col items-center mt-16 md:mt-0"
         >
           {/* Logo box */}
           <div className="w-[15vw] h-[15vw] min-w-[100px] min-h-[100px] max-w-[160px] max-h-[160px] bg-primary flex items-center justify-center">
