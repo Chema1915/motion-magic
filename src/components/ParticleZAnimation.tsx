@@ -54,11 +54,11 @@ class Particle {
       
       // Allow mouse interaction for background particles too
       if (mouse.pressed && dist < mouseRadius) {
-        const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 1.8;
+        const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 2.5;
         const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-        const force = (speed * 0.6 + 1.2) * (0.5 + Math.random() * 0.5);
-        this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 1.5;
-        this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 1.5;
+        const force = (speed * 0.8 + 1.5) * (0.5 + Math.random());
+        this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 2;
+        this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 2;
       }
       
       this.x += this.vx;
@@ -91,12 +91,12 @@ class Particle {
     // If mouse is pressed and near particle, fling in mouse direction with chaos
     if (mouse.pressed && dist < mouseRadius) {
       // Gentler movement in denser space
-      const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 1.8;
+      const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 2.5;
       const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-      const force = (speed * 0.6 + 1.2) * (0.5 + Math.random() * 0.5);
+      const force = (speed * 0.8 + 1.5) * (0.5 + Math.random());
       
-      this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 1.5;
-      this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 1.5;
+      this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 2;
+      this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 2;
       this.progress = 0;
     }
     
@@ -104,9 +104,9 @@ class Particle {
     this.x += this.vx;
     this.y += this.vy;
     
-    // Less friction for lighter feel
-    this.vx *= 0.95;
-    this.vy *= 0.95;
+    // Normal friction
+    this.vx *= 0.98;
+    this.vy *= 0.98;
     
     // Bounce off walls
     if (this.x < 0 || this.x > this.canvasWidth) this.vx *= -1;
