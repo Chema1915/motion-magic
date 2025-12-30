@@ -14,10 +14,14 @@ const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className={`${box} bg-primary flex items-center justify-center`}>
-        <svg viewBox="0 0 100 100" className="w-full h-full p-3">
+        <svg viewBox="0 0 100 100" className="w-full h-full p-3" aria-hidden="true">
           <path
-            d="M15 15 L85 15 L85 32 L50 32 L85 68 L85 85 L15 85 L15 68 L50 68 L15 32 Z"
-            fill="currentColor"
+            d="M18 26 H82 L18 74 H82"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="14"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
             className="text-primary-foreground"
           />
         </svg>
