@@ -8,6 +8,8 @@ class Particle {
   vx: number;
   vy: number;
   size: number;
+  baseSize: number;
+  finalSize: number;
   color: string;
   progress: number;
   canvasWidth: number;
@@ -29,9 +31,11 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.vx = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
     this.vy = (Math.random() - 0.5) * (isBackground ? 0.8 : 1.5);
-    // Size scales with screen - larger for solid appearance
+    // Size scales with screen - starts small, grows when forming
     const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
-    this.size = isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
+    this.baseSize = isBackground ? 1.5 * scaleFactor : 1.2 * scaleFactor;
+    this.finalSize = isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
+    this.size = this.baseSize;
     this.color = isBackground ? '#9CA3AF' : '#D1D5DB';
     this.progress = 0;
     this.delay = Math.random() * 0.2 + relativeY * 0.15;
@@ -46,7 +50,8 @@ class Particle {
     this.targetY = this.relativeTargetY * canvasHeight;
     // Update size on resize
     const scaleFactor = Math.min(canvasWidth, canvasHeight) / 1000;
-    this.size = this.isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
+    this.baseSize = this.isBackground ? 1.5 * scaleFactor : 1.2 * scaleFactor;
+    this.finalSize = this.isBackground ? 1.5 * scaleFactor : 2.8 * scaleFactor;
   }
 
   update(forming: boolean, time: number, mouse: { x: number; y: number; vx: number; vy: number; pressed: boolean }) {
@@ -133,6 +138,12 @@ class Particle {
         // Move towards target
         this.x += (this.targetX - this.x) * eased * 0.04 + wobble * 0.1;
         this.y += (this.targetY - this.y) * eased * 0.04 + wobble * 0.1;
+        
+        // Grow size only when 80% formed
+        if (this.progress > 0.8) {
+          const growthProgress = (this.progress - 0.8) / 0.2;
+          this.size = this.baseSize + (this.finalSize - this.baseSize) * growthProgress;
+        }
         
         // Slow down velocity as it forms
         this.vx *= 0.95;
