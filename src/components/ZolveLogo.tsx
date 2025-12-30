@@ -16,7 +16,7 @@ const ZolveLogo = ({ size = 'large' }: ZolveLogoProps) => {
       <div className={`${box} bg-primary flex items-center justify-center`}>
         <svg viewBox="0 0 100 100" className="w-full h-full p-3">
           <path
-            d="M20 20 L80 20 L80 25 L30 25 L30 75 L80 75 L80 80 L20 80 L20 75 L70 75 L70 25 L20 25 Z"
+            d="M15 20 L85 20 L85 30 L40 30 L85 70 L85 80 L15 80 L15 70 L60 70 L15 30 Z"
             fill="currentColor"
             className="text-primary-foreground"
           />
