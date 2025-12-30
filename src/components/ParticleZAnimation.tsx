@@ -73,37 +73,43 @@ const ParticleZAnimation = () => {
       const points: { x: number; y: number }[] = [];
       
       // Center the Z in the canvas
-      const zWidth = canvasWidth * 0.6;
-      const zHeight = canvasHeight * 0.65;
+      const zWidth = canvasWidth * 0.55;
+      const zHeight = canvasHeight * 0.6;
       const offsetX = (canvasWidth - zWidth) / 2;
       const offsetY = (canvasHeight - zHeight) / 2;
-      const thickness = 70; // Much thicker bars
-      const spacing = 6; // Denser particles
+      const thickness = 65;
+      const spacing = 5;
       
-      // Top bar (left to right)
+      // Top bar
       for (let x = 0; x < zWidth; x += spacing) {
         for (let y = 0; y < thickness; y += spacing) {
           points.push({ x: offsetX + x, y: offsetY + y });
         }
       }
       
-      // Diagonal (from top-right to bottom-left) - this is the correct Z orientation
-      const diagonalSteps = 120;
-      for (let i = 0; i < diagonalSteps; i++) {
+      // Diagonal - perpendicular thickness for uniform appearance
+      const diagonalLength = Math.sqrt(zWidth * zWidth + (zHeight - thickness * 2) * (zHeight - thickness * 2));
+      const angle = Math.atan2(zHeight - thickness * 2, -zWidth);
+      const perpAngle = angle + Math.PI / 2;
+      
+      const diagonalSteps = Math.floor(diagonalLength / spacing);
+      for (let i = 0; i <= diagonalSteps; i++) {
         const progress = i / diagonalSteps;
         // Start from right, go to left
-        const x = zWidth - (zWidth * progress);
-        const y = thickness + (zHeight - thickness * 2) * progress;
+        const centerX = offsetX + zWidth - (zWidth * progress);
+        const centerY = offsetY + thickness + (zHeight - thickness * 2) * progress;
         
-        for (let offsetW = -thickness/2; offsetW < thickness/2; offsetW += spacing) {
+        // Add particles perpendicular to the diagonal
+        const halfThickness = thickness / 2;
+        for (let t = -halfThickness; t < halfThickness; t += spacing) {
           points.push({
-            x: offsetX + x + offsetW * 0.7,
-            y: offsetY + y
+            x: centerX + Math.cos(perpAngle) * t,
+            y: centerY + Math.sin(perpAngle) * t
           });
         }
       }
       
-      // Bottom bar (left to right)
+      // Bottom bar
       for (let x = 0; x < zWidth; x += spacing) {
         for (let y = 0; y < thickness; y += spacing) {
           points.push({
