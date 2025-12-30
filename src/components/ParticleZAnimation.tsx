@@ -50,12 +50,15 @@ class Particle {
     const dy = this.y - mouse.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    // If mouse is pressed and near particle, fling in mouse direction
+    // If mouse is pressed and near particle, fling in mouse direction with chaos
     if (mouse.pressed && dist < mouseRadius) {
-      // Add mouse velocity to particle (fling effect)
-      const force = 2.5;
-      this.vx = mouse.vx * force + (Math.random() - 0.5) * 2;
-      this.vy = mouse.vy * force + (Math.random() - 0.5) * 2;
+      // Base direction from mouse movement + random spread
+      const angle = Math.atan2(mouse.vy, mouse.vx) + (Math.random() - 0.5) * 2.5; // Random spread
+      const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+      const force = (speed * 1.5 + 3) * (0.5 + Math.random()); // Variable force per particle
+      
+      this.vx = Math.cos(angle) * force + (Math.random() - 0.5) * 4;
+      this.vy = Math.sin(angle) * force + (Math.random() - 0.5) * 4;
       this.progress = 0; // Reset progress so it animates back
     }
     
