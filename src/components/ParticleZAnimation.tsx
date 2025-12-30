@@ -28,7 +28,7 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.vx = (Math.random() - 0.5) * 1.5;
     this.vy = (Math.random() - 0.5) * 1.5;
-    this.size = 1.2; // Small circles
+    this.size = 1.8; // Size calculated to touch neighbors at 0.002 spacing
     this.color = '#D1D5DB';
     this.progress = 0;
     this.delay = Math.random() * 0.2 + relativeY * 0.15; // Shorter delays
@@ -103,7 +103,7 @@ const ParticleZAnimation = () => {
       const offsetX = 0.50; // Visible portion is exactly 50%
       const offsetY = 0; // Start from top
       const thickness = 0.12;
-      const spacing = 0.0008; // Ultra dense spacing for solid Z with small particles
+      const spacing = 0.002; // Original spacing for fluid animation
       
       // Calculate diagonal angle to make bars same visual width
       const diagAngle = Math.atan2(zHeight - thickness * 2, zWidth);
