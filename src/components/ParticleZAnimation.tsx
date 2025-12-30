@@ -20,21 +20,21 @@ class Particle {
     this.y = Math.random() * canvasHeight;
     this.targetX = targetX;
     this.targetY = targetY;
-    this.vx = (Math.random() - 0.5) * 0.8;
-    this.vy = (Math.random() - 0.5) * 0.8;
-    this.size = 3;
+    this.vx = (Math.random() - 0.5) * 1.2;
+    this.vy = (Math.random() - 0.5) * 1.2;
+    this.size = 2.5;
     this.color = '#D1D5DB';
     this.progress = 0;
   }
 
   update(forming: boolean) {
     if (forming) {
-      this.progress += 0.006;
+      this.progress += 0.008;
       if (this.progress > 1) this.progress = 1;
       
       const eased = this.easeInOutCubic(this.progress);
-      this.x += (this.targetX - this.x) * eased * 0.05;
-      this.y += (this.targetY - this.y) * eased * 0.05;
+      this.x += (this.targetX - this.x) * eased * 0.06;
+      this.y += (this.targetY - this.y) * eased * 0.06;
     } else {
       this.x += this.vx;
       this.y += this.vy;
@@ -71,37 +71,41 @@ const ParticleZAnimation = () => {
 
     function createZPoints(canvasWidth: number, canvasHeight: number) {
       const points: { x: number; y: number }[] = [];
-      const offsetX = canvasWidth * 0.6;
-      const offsetY = canvasHeight * 0.2;
-      const zWidth = canvasWidth * 0.5;
-      const zHeight = canvasHeight * 0.6;
-      const thickness = 40;
       
-      // Top bar
-      for (let x = 0; x < zWidth; x += 8) {
-        for (let y = 0; y < thickness; y += 8) {
+      // Center the Z in the canvas
+      const zWidth = canvasWidth * 0.6;
+      const zHeight = canvasHeight * 0.65;
+      const offsetX = (canvasWidth - zWidth) / 2;
+      const offsetY = (canvasHeight - zHeight) / 2;
+      const thickness = 70; // Much thicker bars
+      const spacing = 6; // Denser particles
+      
+      // Top bar (left to right)
+      for (let x = 0; x < zWidth; x += spacing) {
+        for (let y = 0; y < thickness; y += spacing) {
           points.push({ x: offsetX + x, y: offsetY + y });
         }
       }
       
-      // Diagonal
-      const diagonalSteps = 80;
+      // Diagonal (from top-right to bottom-left) - this is the correct Z orientation
+      const diagonalSteps = 120;
       for (let i = 0; i < diagonalSteps; i++) {
         const progress = i / diagonalSteps;
-        const x = zWidth * progress;
+        // Start from right, go to left
+        const x = zWidth - (zWidth * progress);
         const y = thickness + (zHeight - thickness * 2) * progress;
         
-        for (let offset = -thickness/2; offset < thickness/2; offset += 8) {
+        for (let offsetW = -thickness/2; offsetW < thickness/2; offsetW += spacing) {
           points.push({
-            x: offsetX + x + offset,
-            y: offsetY + y + offset
+            x: offsetX + x + offsetW * 0.7,
+            y: offsetY + y
           });
         }
       }
       
-      // Bottom bar
-      for (let x = 0; x < zWidth; x += 8) {
-        for (let y = 0; y < thickness; y += 8) {
+      // Bottom bar (left to right)
+      for (let x = 0; x < zWidth; x += spacing) {
+        for (let y = 0; y < thickness; y += spacing) {
           points.push({
             x: offsetX + x,
             y: offsetY + zHeight - thickness + y
@@ -116,7 +120,7 @@ const ParticleZAnimation = () => {
     const particles = zPoints.map(point => new Particle(point.x, point.y, canvas.width, canvas.height));
     
     let forming = false;
-    const timeout = setTimeout(() => { forming = true; }, 1000);
+    const timeout = setTimeout(() => { forming = true; }, 800);
 
     let animationId: number;
 
