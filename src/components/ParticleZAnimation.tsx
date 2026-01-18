@@ -274,10 +274,45 @@ const ParticleZAnimation = () => {
     const handleMouseUp = () => {
       mouse.pressed = false;
     };
+
+    // Touch event handlers for mobile
+    const handleTouchStart = (e: TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('button, a, [role="button"], input, textarea')) {
+        return;
+      }
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        mouse.x = touch.clientX;
+        mouse.y = touch.clientY;
+        mouse.prevX = mouse.x;
+        mouse.prevY = mouse.y;
+        mouse.pressed = true;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        mouse.prevX = mouse.x;
+        mouse.prevY = mouse.y;
+        mouse.x = touch.clientX;
+        mouse.y = touch.clientY;
+        mouse.vx = mouse.x - mouse.prevX;
+        mouse.vy = mouse.y - mouse.prevY;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouse.pressed = false;
+    };
     
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
 
     let animationId: number;
 
@@ -315,6 +350,9 @@ const ParticleZAnimation = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       clearTimeout(timeout);
       cancelAnimationFrame(animationId);
     };
