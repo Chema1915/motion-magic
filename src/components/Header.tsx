@@ -45,7 +45,7 @@ const Header = () => {
           </motion.div>
         </Link>
 
-        <nav className="ml-auto flex items-center" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)' }}>
+        <nav className="ml-auto hidden md:flex items-center" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)' }}>
           <Link 
             to="/catalogo" 
             className="text-muted-foreground hover:text-foreground transition-colors duration-200"
